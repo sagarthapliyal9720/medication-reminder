@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Add Medicine · MediRemind{% endblock %}
+
+{% block content %}
+
+<div class="max-w-xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <a href="{% url 'my_medicines' %}" class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-primary-600 mb-3 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Medicines
+        </a>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">Add Medicine</h1>
+        <p class="text-slate-500 mt-1">Enter the details and set dose timings.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Medicine Name -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Medicine Name</label>
+                <input type="text" name="name" required
+                       placeholder="e.g. Paracetamol"
+                       class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition text-slate-800 placeholder:text-slate-400">
+            </div>
+
+            <!-- Dosage -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Dosage</label>
+                <input type="text" name="dosage" required
+                       placeholder="e.g. 500 mg"
+                       class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition text-slate-800 placeholder:text-slate-400">
+            </div>
+
+            <!-- Instructions -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Instructions <span class="text-slate-400 font-normal">(optional)</span></label>
+                <textarea name="instructions" rows="3"
+                          placeholder="e.g. After food, with water"
+                          class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition text-slate-800 placeholder:text-slate-400 resize-none"></textarea>
+            </div>
+
+            <!-- Dose Timings -->
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-3">Dose Timings</label>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center text-sm font-semibold">1</span>
+                        <input type="time" name="times" required
+                               class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-sm font-semibold">2</span>
+                        <input type="time" name="times"
+                               class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center text-sm font-semibold">3</span>
+                        <input type="time" name="times"
+                               class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition">
+                    </div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">At least one timing is required. Leave extra slots empty if not needed.</p>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-sm hover:shadow transition focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2">
+                Save Medicine
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}My Medicines · MediRemind{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">My Medicines</h1>
+        <p class="text-slate-500 mt-1">All your active medications and schedules.</p>
+    </div>
+    <a href="{% url 'add_medicine' %}"
+       class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-sm transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Add Medicine
+    </a>
+</div>
+
+{% if medicines %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {% for medicine in medicines %}
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition p-6">
+                <!-- Medicine Header -->
+                <div class="flex items-start gap-4 mb-4">
+                    <div class="w-11 h-11 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-lg font-semibold text-slate-800 truncate">{{ medicine.name }}</h2>
+                        <p class="text-sm text-slate-500">{{ medicine.dosage }}</p>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                {% if medicine.instructions %}
+                    <div class="mb-4 px-3 py-2 bg-slate-50 rounded-lg text-sm text-slate-600">
+                        <span class="font-medium text-slate-700">Instructions:</span> {{ medicine.instructions }}
+                    </div>
+                {% endif %}
+
+                <!-- Schedule -->
+                <div>
+                    <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Schedule</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {% for schedule in medicine.schedules.all %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-50 text-primary-700 text-sm font-medium rounded-lg">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                {{ schedule.time|time:"h:i A" }}
+                            </span>
+                        {% empty %}
+                            <span class="text-sm text-slate-400">No timings set</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <!-- Empty State -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center">
+        <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+            </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-700 mb-1">No medicines yet</h3>
+        <p class="text-slate-500 mb-6">You haven't added any medicines. Start by adding your first one.</p>
+        <a href="{% url 'add_medicine' %}"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-sm transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add Your First Medicine
+        </a>
+    </div>
+{% endif %}
+
+{% endblock %}
