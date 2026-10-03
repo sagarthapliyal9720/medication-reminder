@@ -25,7 +25,6 @@ def generate_today_doses(user):
 
 def send_daily_medication_summary(user):
 
-    # First generate today's dose records
     generate_today_doses(user)
 
     today = date.today()
@@ -53,7 +52,10 @@ def send_daily_medication_summary(user):
 
         message += f"- {medicine_name} | {time} | {status}\n"
 
-    message += "\nTake care!"
+    message += "\n"
+    message += "Please visit the link below to view and mark your doses:\n\n"
+    message += "https://medication-reminder-cyan.vercel.app/medicines/today/\n\n"
+    message += "Take care!"
 
     send_mail(
         subject="Today's Medication Summary",
@@ -63,7 +65,6 @@ def send_daily_medication_summary(user):
     )
 
     return True
-
 
 def send_daily_summary_to_all_users():
 

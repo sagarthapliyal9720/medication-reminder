@@ -2,6 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from .models import FamilyMember
+from datetime import date, timedelta
+from django.db.models import Count
+from medicines.models import DoseRecord
+from medicines.utils import generate_today_doses
 User = get_user_model()
 
 
@@ -69,11 +73,60 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def dashboard(request):
-    return render(
-        request,
-        "dashboard.html"
+
+    # Generate today's dose records
+    generate_today_doses(request.user)
+
+    today = date.today()
+
+    # First day of current month
+    month_start = today.replace(day=1)
+
+    # All doses of current month
+    doses = DoseRecord.objects.filter(
+        schedule__medicine__user=request.user,
+        date__gte=month_start,
+        date__lte=today
     )
 
+    total_doses = doses.count()
+
+    taken_doses = doses.filter(
+        status="taken"
+    ).count()
+
+    missed_doses = doses.filter(
+        status="missed"
+    ).count()
+
+    pending_doses = doses.filter(
+        status="pending"
+    ).count()
+
+    # Pending doses are not included in adherence calculation
+    completed_doses = taken_doses + missed_doses
+
+    if completed_doses > 0:
+        adherence_percentage = round(
+            (taken_doses / completed_doses) * 100,
+            2
+        )
+    else:
+        adherence_percentage = 0
+
+    context = {
+        "total_doses": total_doses,
+        "taken_doses": taken_doses,
+        "missed_doses": missed_doses,
+        "pending_doses": pending_doses,
+        "adherence_percentage": adherence_percentage,
+    }
+
+    return render(
+        request,
+        "dashboard.html",
+        context
+    )
 def logout_view(request):
 
     if request.method == "POST":
