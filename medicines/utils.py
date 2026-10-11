@@ -54,7 +54,7 @@ def send_daily_medication_summary(user):
 
     message += "\n"
     message += "Please visit the link below to view and mark your doses:\n\n"
-    message += "https://medication-reminder-cyan.vercel.app/medicines/today/\n\n"
+    message += "https://medication-reminder-dun.vercel.app/medicines/today/\n\n"
     message += "Take care!"
 
     send_mail(
